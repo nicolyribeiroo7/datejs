@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+        }
+        h1{
+            color: #333;
+        }
+        label{
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input{
+            padding: 5px;
+            margin: 5px;
+        }
+        button{
+            margin-top: 15px;
+            padding: 8px 20px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button.hover{
+            background-color: #555;
+        }
+        .btn-limpar{
+            background-color: #888;
+        }
+        #resultado{
+            margin-top: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1> Calculadora de intervalo entre datas</h1>
+
+    <!-- area de entrada de datas-->
+     <label for="data1"> Digite a primeira data: </label>
+     <input type="date" id="data1">
+
+     <label for="data2"> Digite a segunda data: </label>
+     <input type="date" id="data2">
+
+     <!--botoes de açao-->
+     <br>
+     <button onclick="calcularIntervalo()"> Calcular Intervalo</button>
+     <button class="btn-limpar" onclick="limparCampos()">Limpar campos</button>
+     
+     <!-- onde o resultado sera exibido-->
+      <div id="resultado"></div>
+
+      <script>
+        /** 
+         * funçao : calcularIntervalo()
+         * objetivo: calcular a diferença entre duas datas
+         * e mostrar o intervalo em dias, meses e anos
+         * */
+        function calcularIntervalo(){
+
+            //captura os valores informados pelo usuario
+            const data1 = document.getElementById("data1").value;
+            const data2 = document.getElementById("data2").value;
+
+            //verifica se os dois campos foram preenchidos
+            if (!data1 || !data2) {
+                document.getElementById("resultado").innerHTML = 
+                " <strong style='color:red;'> Por favor, preencha as duas datas antes de calcular!</strong>";
+                return; //interrompe a funçao se faltar alguma data
+            }
+            //converte as strings recebidas em objetos do tipo date
+            const d1 = new Date(data1);
+            const d2 = new Date(data2);
+            
+            //calcula a diferença entre as datas em milissegundos
+            //a subtraçao entre dois objetos Date retorna o intervalo em milissegundos
+            const diffEmMs = Math.abs(d2 - d1); // Math.abs() garante valor positivo
+
+            /**
+             * explicaçao
+             * 1 segundo = 1000 milissegundos
+             * 1 minuto = 60 segundos
+             * 1 hora = 60 minutos
+             * 1 dia = 24 horas
+             * logo, 1 dia = 1000*60*60*24 milissegundos
+             */
+            const diffEmDias = Math.floor(diffEmMs / (1000* 60 * 60 * 24));
+             /** 
+              * converte dias em meses e anos de forma aproximada
+              * obs: essa aproximaçao considera 30 dias por mes e 12 meses por amo
+              * o suficiente para fins didaticos
+            */
+           const diffEmMeses = Math.floor(diffEmDias / 30);
+           const diffEmAnos = Math.floor(diffEmMeses / 12);
+
+           // exibe os resultados na tela dentro da div "resultado"
+           document.getElementById("resultado").innerHTML = `
+           <h3> Resultado:</h3>
+           <p><strong> Diferença em dias: </strong> ${diffEmDias} dias </p>
+           <p><strong> Diferença em meses: </strong> ${diffEmMeses} meses </p>
+            <p><strong> Diferença em anos: </strong> ${diffEmAnos} anos </p>
+            `; 
+        }
+
+        /** funçao: limparCampos()
+         * objetivo: limpar os campos de data e o resultado
+         */
+        function limparCampos(){
+            //apaga os valores digitados nos inputs
+            document.getElementById("data1").value = "";
+            document.getElementById("data2").value = "";
+            
+            //limpa o conteudo d area de resultado
+            document.getElementById("resultado").innerHTML = "";
+            
+            //(opcional) foca novamente no primeiro campo
+            document.getElementById("data1").focus();
+            
+        }
+      </script>
+</body>
+</html>
